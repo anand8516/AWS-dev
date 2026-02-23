@@ -18,3 +18,21 @@ UpdateItemSpec updateItemSpec = new UpdateItemSpec()
 .withValueMap(new ValueMap()
 .withString(":val1", "Yes"))
 .withReturnValues(ReturnValue.ALL_NEW);
+
+
+.withConditionExpression("Is_Incomplete = :v_old")
+
+catch (ConditionalCheckFailedException e) {
+            System.out.println("\nUPDATE#2 - REPEAT: Printing item after the conditional update for the item - \"" + userId + "\" and \"" + noteId + "\"  - FAILURE:");
+            System.out.println("UpdateItem failed on item due to unmatching condition!");
+            System.err.println(e.getMessage());
+        }
+
+//Allow update to the Notes item only if the note is incomplete - SUCCESS
+        updateExistingAttributeConditionally(table, qUserId, qNoteId, newNote);
+
+        //Allow update to the Notes item only if the note is incomplete - FAILURE
+        updateExistingAttributeConditionally(table, qUserId, qNoteId, newNote);
+
+
+
