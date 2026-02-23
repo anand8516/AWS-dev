@@ -8,3 +8,13 @@ ScanSpec scanSpec = new ScanSpec()
 
 
 Iterator<Item> item = page.iterator();
+
+
+UpdateItemSpec updateItemSpec = new UpdateItemSpec()
+.withPrimaryKey("UserId", userId, "NoteId", noteId)
+.withUpdateExpression("set #inc = :val1")
+.withNameMap(new NameMap()
+.with("#inc", "Is_Incomplete"))
+.withValueMap(new ValueMap()
+.withString(":val1", "Yes"))
+.withReturnValues(ReturnValue.ALL_NEW);
