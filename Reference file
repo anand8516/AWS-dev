@@ -33,6 +33,69 @@ catch (ConditionalCheckFailedException e) {
 
         //Allow update to the Notes item only if the note is incomplete - FAILURE
         updateExistingAttributeConditionally(table, qUserId, qNoteId, newNote);
+lab 4:
+bucket-> labstack-7803233e-1fd3-438c-9a-pollynotesapibucket-tkqlk71sikl8
+
+set env-parms=TABLE_NAME=Notes, MP3_BUCKET_NAME=<MP3BucketName>
+
+aws lambda update-function-configuration --function-name dictate-function --environment Variables="{%env-parms%}"
+
+var request = GetItemRequest.builder()
+                .tableName(tableName)
+                .key(key)
+                .build();
+pollyclient.synthesizeSpeech(SynthesizeSpeechRequest.builder()
+                    .outputFormat("mp3")
+                    .text(noteText)
+                    .voiceId(voice)
+                    .build(), destfile)
+                    .join();
+
+var presigner = S3Presigner.builder().build();
+            var url = presigner.presignGetObject(GetObjectPresignRequest.builder()
+                    .signatureDuration(Duration.ofMinutes(5))
+                    .getObjectRequest(GetObjectRequest.builder()
+                            .bucket(bucket)
+                            .key(key)
+                            .build())
+                            .build())
+                            .url();
+
+            response = url.toString();
+
+cd C:\code\dictateFunction
+
+aws lambda update-function-code --function-name dictate-function --zip-file fileb://target/dictateFunction.jar
+
+aws lambda update-function-configuration --function-name dictate-function --handler dictate.Handler --memory 500 --timeout 60
+{
+"UserId": "newbie",
+"NoteId": "2",
+"VoiceId": "Joey"
+}
+
+
+{
+"UserId": "newbie",
+"NoteId": "2",
+"VoiceId": "Joey"
+}
+
+
+cd C:\code\dictateFunction\src\main\resources
+
+
+aws lambda invoke --function-name dictate-function --payload fileb://event.json response.txt
+
+
+
+
+
+
+
+
+
+
 
 
 
